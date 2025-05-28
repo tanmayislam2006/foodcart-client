@@ -10,7 +10,7 @@ const MainLayout = () => {
       <Navbar />{" "}
       <ToastContainer/>
       <main className="flex-1 flex justify-center items-start">
-        <div className="w-full min-h-[calc(100vh-220px)]">
+        <div className="w-full min-h-[calc(100vh-130px)]">
           <Outlet />
         </div>
       </main>
