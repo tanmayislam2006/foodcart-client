@@ -4,6 +4,8 @@ import DisplayFood from './DisplayFood';
 import WhyChoose from './WhyChoose';
 import RegularDish from './RegularDish';
 import Cheif from './Cheif';
+import Taste from './Taste';
+
 
 const Home = () => {
     return (
@@ -13,6 +15,7 @@ const Home = () => {
             <WhyChoose/>
             <RegularDish/>
             <Cheif/>
+            <Taste/>
         </div>
     );
 };
