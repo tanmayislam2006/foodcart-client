@@ -4,10 +4,19 @@ import { FcGoogle } from "react-icons/fc";
 import FoodCartContext from "../../Context/FoodCartContext";
 
 const Login = () => {
-  const { googleLogin } = use(FoodCartContext);
+  const { googleLogin, loginUser } = use(FoodCartContext);
   const handleGoogleLogin = () => {
     googleLogin()
       .then((res) => console.log(res.user))
+      .then((err) => console.log(err));
+  };
+  const handleLogInSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    loginUser(email, password)
+      .then((result) => console.log(result))
       .then((err) => console.log(err));
   };
   return (
@@ -21,14 +30,19 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-primary mb-6">
           Login to Foodied
         </h2>
-        <form className="w-full flex flex-col gap-4">
+        <form
+          onSubmit={handleLogInSubmit}
+          className="w-full flex flex-col gap-4"
+        >
           <input
+            name="email"
             type="email"
             placeholder="Email"
             className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
             required
           />
           <input
+            name="password"
             type="password"
             placeholder="Password"
             className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
@@ -46,9 +60,10 @@ const Login = () => {
           <span className="mx-3 text-gray-400 text-sm">or</span>
           <div className="flex-1 h-px bg-primary/20"></div>
         </div>
-        <button 
-        onClick={handleGoogleLogin}
-        className="w-full cursor-pointer flex items-center justify-center gap-3 border border-primary/30 py-3 rounded-lg font-semibold text-primary bg-white">
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full cursor-pointer flex items-center justify-center gap-3 border border-primary/30 py-3 rounded-lg font-semibold text-primary bg-white"
+        >
           <FcGoogle className="text-2xl" />
           Continue with Google
         </button>
