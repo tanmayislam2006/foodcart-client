@@ -11,10 +11,10 @@ const About = () => {
                     className="w-40 h-40 mb-6 rounded-full border-4 border-primary/20 bg-white object-contain"
                 />
                 <h1 className="text-3xl md:text-4xl font-extrabold text-primary mb-4">
-                    About Foodied
+                    About Food Cart
                 </h1>
                 <p className="text-gray-700 text-lg mb-6">
-                    Welcome to <span className="font-bold text-primary">Foodied</span> – your go-to destination for fresh, delicious, and healthy food delivered right to your doorstep. 
+                    Welcome to <span className="font-bold text-primary">Food Cart</span> – your go-to destination for fresh, delicious, and healthy food delivered right to your doorstep. 
                     <br /><br />
                     Our mission is to bring you a wide variety of mouth-watering dishes, prepared by expert chefs using only the finest ingredients. Whether you crave classic comfort food or want to try something new, Foodied has something for everyone.
                 </p>

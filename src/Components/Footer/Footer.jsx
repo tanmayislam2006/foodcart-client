@@ -7,9 +7,9 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 {/* Brand & Copyright */}
                 <div className="text-center md:text-left">
-                    <span className="text-2xl font-extrabold text-primary tracking-tight">FOODIED</span>
+                    <span className="text-2xl font-extrabold text-primary tracking-tight">FOODCART</span>
                     <p className="text-gray-500 text-sm mt-1">
-                        &copy; {new Date().getFullYear()} Foodied. All rights reserved.
+                        &copy; {new Date().getFullYear()} Foodcart. All rights reserved.
                     </p>
                 </div>
                 {/* Links */}

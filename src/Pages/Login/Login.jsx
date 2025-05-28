@@ -1,13 +1,22 @@
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import Logo from "../../assets/food-cart.png";
 import { FcGoogle } from "react-icons/fc";
 import FoodCartContext from "../../Context/FoodCartContext";
+import { Link, useLocation, useNavigate } from "react-router";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const { googleLogin, loginUser } = use(FoodCartContext);
+  const [showPass,setShowPass]=useState(false)
+  const location = useLocation();
+  const navigate = useNavigate("");
   const handleGoogleLogin = () => {
     googleLogin()
-      .then((res) => console.log(res.user))
+      .then((res) => {
+        if (res.user) {
+          navigate(location?.state || "/");
+        }
+      })
       .then((err) => console.log(err));
   };
   const handleLogInSubmit = (e) => {
@@ -16,7 +25,11 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
     loginUser(email, password)
-      .then((result) => console.log(result))
+      .then((result) => {
+        if (result.user) {
+          navigate(location?.state || "/");
+        }
+      })
       .then((err) => console.log(err));
   };
   return (
@@ -41,13 +54,26 @@ const Login = () => {
             className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
             required
           />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
-            required
-          />
+            <div className="mb-4 relative ">
+              <p
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-8 bottom-4 cursor-pointer"
+              >
+                {showPass ? (
+                  <FaRegEyeSlash size={20} />
+                ) : (
+                  <FaRegEye size={20} />
+                )}
+              </p>
+              <input
+                type={showPass ? "text" : "password"}
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
+                required
+              />
+            </div>
           <button
             type="submit"
             className="w-full bg-primary cursor-pointer text-white font-bold py-3 rounded-lg mt-2"
@@ -69,9 +95,13 @@ const Login = () => {
         </button>
         <p className="mt-6 text-gray-500 text-sm">
           Don't have an account?{" "}
-          <a href="/register" className="text-primary font-semibold">
+          <Link
+            state={location.state}
+            to="/register"
+            className="text-primary font-semibold"
+          >
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </section>
