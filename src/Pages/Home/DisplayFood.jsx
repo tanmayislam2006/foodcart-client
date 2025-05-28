@@ -30,8 +30,8 @@ const foodItems = [
 const DisplayFood = () => {
     return (
         <div className="w-full py-8 px-2 md:px-0">
-            <h2 className="text-2xl font-bold text-primary mb-6 text-center">Popular Dishes</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-center  text-primary mb-2">Popular Dishes</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 my-6">
                 {foodItems.map((item, idx) => (
                     <div key={idx} className="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center">
                         <img src={item.image} alt={item.name} className="w-32 h-32 object-cover rounded-full mb-4 border-4 border-primary/20" />
