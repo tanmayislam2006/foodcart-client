@@ -30,7 +30,7 @@ const Taste = () => {
             className="w-32 h-32 md:w-44 md:h-44  object-cover rounded-full border-4 border-white shadow"
           />
           <img
-            src="https://i.ibb.co/WvGBDnd0/pexels-valeriya-1199960.jpg"
+            src="https://i.ibb.co/Ng3x6rPt/pexels-valeriya-1860204.jpg"
             alt="dish"
             className="w-20 h-20 md:w-32 md:h-32 object-cover rounded-full border-4 border-white shadow"
           />

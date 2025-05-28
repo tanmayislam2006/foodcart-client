@@ -33,9 +33,3 @@ h1, h2, h3, h4, h5, h6 {
 html{
   scroll-behavior: smooth;
 }
-a.active{
-  text-decoration: underline;
-  font-weight: bold;
-  color:#16A34A
-;
-}

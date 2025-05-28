@@ -5,13 +5,11 @@ import WhyChoose from './WhyChoose';
 import RegularDish from './RegularDish';
 import Cheif from './Cheif';
 import Taste from './Taste';
-import Navbar from './Navbar';
 
 
 const Home = () => {
     return (
         <div>
-            <Navbar/>
             <Hero/>
             <DisplayFood/>
             <WhyChoose/>
