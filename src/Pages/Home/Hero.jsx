@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 const Hero = () => {
   return (
@@ -16,19 +17,19 @@ const Hero = () => {
           Discover a world of delicious, nutritious meals delivered right to
           your door. Enjoy freshness, speed, and taste in every bite!
         </p>
-        <div className="flex gap-4 w-full flex-col sm:flex-row">
-          <button className="bg-primary text-white font-semibold px-8 py-3 rounded-full text-base w-full sm:w-auto">
+        <div className="flex gap-4 w-5/6 mx-auto md:w-full flex-col sm:flex-row">
+          <button className="bg-primary text-white font-semibold px-4 py-2 lg:px-8 lg:py-3 rounded-full text-base w-full sm:w-auto">
             Get Started
           </button>
-          <button className="border border-primary text-primary font-semibold px-8 py-3 rounded-full text-base w-full sm:w-auto">
+          <Link to={'/menu'} className="border border-primary text-primary font-semibold px-4 py-2 lg:px-8 lg:py-3 rounded-full text-base w-full sm:w-auto">
             View Menu
-          </button>
+          </Link>
         </div>
       </div>
       {/* Right Content */}
       <div className="flex-1 flex justify-center items-center relative w-full z-10">
         {/* Decorative Abstract Shape */}
-        <div className="absolute -top-10 right-0 md:right-[-60px] w-80 h-80 bg-primary/20 rounded-full z-0"></div>
+        <div className=" absolute -top-10 right-0 md:right-[-60px] w-80 h-80 bg-primary/20 rounded-full z-0"></div>
         {/* Main Food Image */}
         <img
           src="https://i.ibb.co/bMTLNNk4/spencer-davis-5ds-Zn-CVDHd0-unsplash.jpg"

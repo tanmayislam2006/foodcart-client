@@ -18,7 +18,7 @@ const Navbar = () => {
   const { firebaseUser, logoutUser } = use(FoodCartContext);
   const handleLogOut = () => {
     logoutUser()
-      .then((res) => toast.success("LogOut Succesfully"))
+      .then((res) => toast.success("LogOut Succesfully",`${res?.user?.displayName}`))
       .then((err) => console.log(err));
   };
 
@@ -34,7 +34,7 @@ const Navbar = () => {
             </span>
           </Link>
           {/* Desktop Links */}
-          <ul className="hidden md:flex gap-8 items-center">
+          <ul className="hidden lg:flex gap-8 items-center">
             <li>
               <NavLink
                 to="/"
@@ -348,7 +348,7 @@ const Navbar = () => {
         </div>
       </nav>
       {/* Bottom Mobile Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow lg:hidden">
         <ul className="flex justify-around items-center py-2">
           <li>
             <NavLink

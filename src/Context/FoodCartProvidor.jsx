@@ -10,12 +10,16 @@ import {
 const googleProvider = new GoogleAuthProvider();
 import auth from "../Firebase/firebase.init.js";
 import FoodCartContext from "./FoodCartContext.jsx";
+import allItems from "./menu.jsx";
 const GreenProvider = ({ children }) => {
   const [firebaseUser, setFirebaseUser] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [refresh,setRefresh]=useState(false)
+  const [cartItems,setCartItems]=useState([])
+  // temporay data all food items 
+  const [foodItemsAll,setFoodItemsAll]=useState([...allItems])
   const createAccount = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
@@ -67,7 +71,11 @@ const GreenProvider = ({ children }) => {
     logoutUser,
     user,
     refresh,
-    setRefresh
+    setRefresh,
+    cartItems,
+    setCartItems,
+    foodItemsAll,
+    setFoodItemsAll
   };
   return <FoodCartContext value={sharedData}>{children}</FoodCartContext>;
 };
