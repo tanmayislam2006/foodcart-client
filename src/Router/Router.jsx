@@ -9,6 +9,7 @@ import PrivateRouter from "./PrivateRouter";
 import Dasboard from "../Pages/Dasboard/Dasboard";
 import Cart from "../Pages/Cart/Cart";
 import Checkout from "../Pages/Checkout/Checkout";
+import DishDetails from "../Pages/DishDetails/DishDetails";
 
 const router=createBrowserRouter([
     {
@@ -50,6 +51,12 @@ const router=createBrowserRouter([
                 path:'/checkout',
                 element:<PrivateRouter>
                     <Checkout/>
+                </PrivateRouter>
+            },
+            {
+                path:'/dishDetails/:id',
+                element:<PrivateRouter>
+                    <DishDetails/>
                 </PrivateRouter>
             }
 

@@ -10,7 +10,6 @@ const DisplayFood = () => {
     if (isExist) {
       isExist.quantity += 1;
       const remainningItems = cartItems.filter((i) => i.id !== item.id);
-
       setCartItems([...remainningItems, isExist]);
     } else {
       item.quantity = 1;

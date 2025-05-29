@@ -3,6 +3,7 @@ import { FaRegHeart, FaStar } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { toast } from "react-toastify";
+import { Link } from "react-router";
 
 const RegularDish = () => {
   const { cartItems, setCartItems, foodItemsAll } = use(FoodCartContext);
@@ -56,9 +57,12 @@ const RegularDish = () => {
               {dish.desc}
             </p>
             <div className="flex gap-3 w-full">
-              <button className="cursor-pointer flex-1 flex items-center justify-center gap-2 border border-primary text-primary px-4 py-2 rounded-full font-semibold text-sm">
+              <Link
+                to={`/dishDetails/${dish.id}`}
+                className="cursor-pointer flex-1 flex items-center justify-center gap-2 border border-primary text-primary px-4 py-2 rounded-full font-semibold text-sm"
+              >
                 Details
-              </button>
+              </Link>
               <button
                 onClick={() => handleOrderNow(dish)}
                 className="cursor-pointer flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-full font-semibold text-sm"
