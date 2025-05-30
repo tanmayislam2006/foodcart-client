@@ -1,27 +1,12 @@
 import React, { use, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
-import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const categories = ["All", "Breakfast", "Lunch", "Dinner"];
 
 const Menu = () => {
-  const { cartItems, setCartItems, foodItemsAll } = use(FoodCartContext);
-  const navigate =useNavigate()
-  const handleOrderNow = (item) => {
-    const isExist = cartItems.find((i) => i._id == item._id);
-    if (isExist) {
-      isExist.quantity += 1;
-      const remainningItems = cartItems.filter((i) => i._id !== item._id);
-
-      setCartItems([...remainningItems, isExist]);
-    } else {
-      item.quantity = 1;
-      const cart = [...cartItems, item];
-      setCartItems(cart);
-      toast.success("Order Placed Succesfully");
-    }
-  };
+  const { foodItemsAll } = use(FoodCartContext);
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const filteredMenu =
@@ -55,8 +40,8 @@ const Menu = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
           {filteredMenu.map((item, idx) => (
             <div
-              key={idx}
-              className="bg-white rounded-2xl shadow-lg p-5 flex flex-col items-center"
+              key={item.id || item._id || idx}
+              className="bg-white rounded-2xl shadow-lg p-5 flex flex-col justify-between items-center h-full"
             >
               <img
                 src={item.image}
@@ -66,20 +51,13 @@ const Menu = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-1">
                 {item.name}
               </h3>
-              <p className="text-primary font-bold mb-2">{item.price}</p>
+              <p className="text-primary font-bold mb-2">${item.price}</p>
               <p className="text-gray-500 text-sm text-center mb-4">
                 {item.desc}
               </p>
-              <div className="flex gap-3 w-full">
+              <div className="flex gap-3 w-full mt-auto">
                 <button
-                onClick={()=>navigate(`/dishDetails/${item._id}`)}
-                className="cursor-pointer flex-1 border border-primary text-primary px-4 py-2 rounded-full font-semibold text-sm">
-                  Details
-                </button>
-                <button
-                  onClick={() => {
-                    handleOrderNow(item);
-                  }}
+                  onClick={() => navigate(`/dishDetails/${item._id || item.id}`)}
                   className="cursor-pointer flex-1 bg-primary text-white px-4 py-2 rounded-full font-semibold text-sm"
                 >
                   Order

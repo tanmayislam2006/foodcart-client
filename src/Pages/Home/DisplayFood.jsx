@@ -1,73 +1,12 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use} from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const DisplayFood = () => {
-  const { foodItemsAll, user } = use(FoodCartContext);
-  const [cartItems, setCartItems] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const { foodItemsAll } = use(FoodCartContext);
   const foodItems = foodItemsAll.filter((items) => items?.display === "populer");
 
-  // Fetch cart items from database
-  useEffect(() => {
-    if (user) {
-      fetch(`http://localhost:5000/cart/${user?.uid}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setCartItems(data || []);
-        });
-    } else {
-      setCartItems([]);
-    }
-  }, [user, refresh]);
-
-  const handleOrderNow = (item) => {
-    if (!user) {
-      toast.error("Please login to add items to cart");
-      return;
-    }
-    const { _id, ...allInfo } = item;
-    const addToCartItem = {
-      dishId: _id,
-      ...allInfo,
-      uid: user?.uid,
-      quantity: 1,
-    };
-
-    // Check if item already exists in cart
-    const isExist = cartItems.find((i) => i.dishId === item._id);
-
-    if (isExist) {
-      // Only update quantity using PUT
-      fetch(`http://localhost:5000/cart/${_id}`, {
-        method: "PUT",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.modifiedCount) {
-            toast.success("Quantity increased in cart");
-            setRefresh((prev) => !prev);
-          }
-        });
-    } else {
-      // Add new item using POST
-      fetch("http://localhost:5000/cart", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(addToCartItem),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.insertedId) {
-            toast.success("Order Success! Check Cart");
-            setRefresh((prev) => !prev);
-          }
-        });
-    }
-  };
-
+const navigate=useNavigate()
   return (
     <div className="w-full py-8 px-2 md:px-0">
       <h2 className="text-3xl md:text-4xl font-extrabold text-center text-primary mb-2">
@@ -92,7 +31,7 @@ const DisplayFood = () => {
               {item.desc}
             </p>
             <button
-              onClick={() => handleOrderNow(item)}
+              onClick={() => navigate(`/dishDetails/${item?._id}`)}
               className="cursor-pointer flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-full font-semibold text-sm"
             >
               <svg

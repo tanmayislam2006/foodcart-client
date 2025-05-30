@@ -2,10 +2,10 @@ import React, { use, useState } from "react";
 import { useParams } from "react-router";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { FaStar, FaPlus, FaMinus } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const DishDetails = () => {
-  const { foodItemsAll, cartItems, setCartItems } = use(FoodCartContext);
-  console.log(foodItemsAll);
+  const { foodItemsAll, user } = use(FoodCartContext);
   const { id } = useParams();
   const dish = foodItemsAll.find(item => item._id === id);
 
@@ -20,14 +20,31 @@ const DishDetails = () => {
   }
 
   const handleAddToCart = () => {
-    const isExist = cartItems.find(i => i._id === dish._id);
-    if (isExist) {
-      isExist.quantity += quantity;
-      const remainingItems = cartItems.filter(i => i._id !== dish._id);
-      setCartItems([...remainingItems, isExist]);
-    } else {
-      setCartItems([...cartItems, { ...dish, quantity }]);
+    if (!user) {
+      toast.error("Please login to add items to cart");
+      return;
     }
+    const { _id, ...allInfo } = dish;
+    const addToCartItem = {
+      dishId: _id,
+      ...allInfo,
+      uid: user?.uid,
+      quantity: quantity,
+    };
+
+    // Add new item using POST
+    fetch("http://localhost:5000/cart", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(addToCartItem),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        toast.success("Successfully Added to Cart");
+        console.log(data);
+      });
   };
 
   return (

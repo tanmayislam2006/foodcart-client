@@ -2,26 +2,12 @@ import React, { use } from "react";
 import { FaRegHeart, FaStar } from "react-icons/fa";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import FoodCartContext from "../../Context/FoodCartContext";
-import { toast } from "react-toastify";
 import { Link } from "react-router";
 
 const RegularDish = () => {
-  const { cartItems, setCartItems, foodItemsAll } = use(FoodCartContext);
+  const { foodItemsAll } = use(FoodCartContext);
   const dishes = foodItemsAll.filter((items) => items?.display == "regular");
-  const handleOrderNow = (item) => {
-    const isExist = cartItems.find((i) => i._id == item._id);
-    if (isExist) {
-      isExist.quantity += 1;
-      const remainningItems = cartItems.filter((i) => i._id !== item._id);
 
-      setCartItems([...remainningItems, isExist]);
-    } else {
-      item.quantity = 1;
-      const cart = [...cartItems, item];
-      setCartItems(cart);
-      toast.success("Order Placed Succesfully");
-    }
-  };
   return (
     <section className="w-full py-10 px-2 md:px-0">
       <h2 className="text-3xl font-bold text-primary mb-6 text-center">
@@ -58,18 +44,12 @@ const RegularDish = () => {
             </p>
             <div className="flex gap-3 w-full">
               <Link
-                to={`/dishDetails/${dish._id}`}
-                className="cursor-pointer flex-1 flex items-center justify-center gap-2 border border-primary text-primary px-4 py-2 rounded-full font-semibold text-sm"
-              >
-                Details
-              </Link>
-              <button
-                onClick={() => handleOrderNow(dish)}
+              to={`/dishDetails/${dish?._id}`}
                 className="cursor-pointer flex-1 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-full font-semibold text-sm"
               >
                 <MdOutlineShoppingCart className="text-lg" />
                 Order
-              </button>
+              </Link>
             </div>
           </div>
         ))}
