@@ -1,23 +1,61 @@
 import React, { use } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const DisplayFood = () => {
-  const { cartItems, setCartItems, foodItemsAll } = use(FoodCartContext);
+  const {cartItems, setCartItems, foodItemsAll } = use(FoodCartContext);
   const foodItems = foodItemsAll.filter((items) => items?.display == "populer");
   const handleOrderNow = (item) => {
+  //   axios.post("http://localhost:5000/cart", { ...item})
+  // .then(res => console.log(res))
+  // .catch(err => console.log(err));
+    // fetch("http://localhost:5000/cart", {
+    //   method: "POST",
+    //   headers: {
+    //     "content-type": "application/json",
+    //   },
+    //   body: JSON.stringify(item),
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
     const isExist = cartItems.find((i) => i.id == item.id);
     if (isExist) {
       isExist.quantity += 1;
       const remainningItems = cartItems.filter((i) => i.id !== item.id);
+      console.log(isExist,"this is remaing itrms ");
       setCartItems([...remainningItems, isExist]);
+    fetch("http://localhost:5000/cart", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(isExist),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+
     } else {
       item.quantity = 1;
       const cart = [...cartItems, item];
       setCartItems(cart);
       toast.success("Order Placed Succesfully");
     }
-    
+        fetch("http://localhost:5000/cart", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(item),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
   };
   return (
     <div className="w-full py-8 px-2 md:px-0">

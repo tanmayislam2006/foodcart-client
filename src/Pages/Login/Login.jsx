@@ -4,33 +4,120 @@ import { FcGoogle } from "react-icons/fc";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { Link, useLocation, useNavigate } from "react-router";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const { googleLogin, loginUser } = use(FoodCartContext);
+  const { googleLogin, loginUser,setErrorMessage,errorMessage,refresh,setRefresh } = use(FoodCartContext);
   const [showPass,setShowPass]=useState(false)
   const location = useLocation();
   const navigate = useNavigate("");
   const handleGoogleLogin = () => {
     googleLogin()
-      .then((res) => {
-        if (res.user) {
-          navigate(location?.state || "/");
+      .then((result) => {
+        const user = result.user;
+        // check user from database
+        fetch(`http://localhost:5000/user/${user?.uid}`)
+          .then((res) => res.json())
+          .then((data) => {
+            const availableUser = data?.user;
+            // if user is not available
+            if (!availableUser) {
+              const userProfile = {
+                email: user?.email,
+                name: user?.displayName,
+                photo: user?.photoURL,
+                creationTime: user?.metadata?.creationTime,
+                lastSignInTime: user?.metadata?.lastSignInTime,
+                uid: user?.uid,
+              };
+              fetch("http://localhost:5000/register", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userProfile),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.insertedId) {
+                    setRefresh(!refresh);
+                    setErrorMessage("");
+                  }
+                });
+            }
+          });
+        if (user) {
+          // update log in information   in db
+          fetch("http://localhost:5000/login", {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              email: user?.email,
+              lastSignInTime: user?.metadata?.lastSignInTime,
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.modifiedCount) {
+                setRefresh(!refresh);
+              }
+            });
         }
+
+        navigate(location?.state || "/");
+
+        toast.success("Login successful!");
       })
-      .then((err) => console.log(err));
+      .catch((error) => {
+        setErrorMessage(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: errorMessage,
+        });
+      });
   };
-  const handleLogInSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
     loginUser(email, password)
       .then((result) => {
-        if (result.user) {
-          navigate(location?.state || "/");
+        const user = result.user;
+        if (user) {
+          // update information in db
+          fetch("http://localhost:5000/login", {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              email: user?.email,
+              lastSignInTime: user?.metadata?.lastSignInTime,
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) => {});
         }
+        navigate(location?.state || "/");
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Welcome back!",
+        });
       })
-      .then((err) => console.log(err));
+      .catch((error) => {
+        setErrorMessage(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: errorMessage,
+        });
+      });
   };
   return (
     <section className="w-full min-h-[70vh] flex items-center justify-center bg-primary/5 py-12 px-4">
@@ -44,7 +131,7 @@ const Login = () => {
           Login to Foodied
         </h2>
         <form
-          onSubmit={handleLogInSubmit}
+          onSubmit={handleSubmit}
           className="w-full flex flex-col gap-4"
         >
           <input

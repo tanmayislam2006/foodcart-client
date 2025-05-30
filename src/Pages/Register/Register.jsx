@@ -4,21 +4,23 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router";
+import Swal from "sweetalert2";
 
 const Register = () => {
-  const { googleLogin, errorMessage, setErrorMessage } = use(FoodCartContext);
+  const { googleLogin, errorMessage, setErrorMessage, createAccount, refresh, setRefresh } = use(FoodCartContext);
   const [passwordError, setPasswordError] = useState("");
-  const [showPass, setShowPass] = useState("");
-
+  const [showPass, setShowPass] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const handleSubmitRegister = (e) => {
     e.preventDefault();
     setPasswordError("");
     const form = e.target;
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    const { email, password, ...data } = Object.fromEntries(formData.entries());
 
     // Password validation
-    const password = data.password || "";
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
     if (!passwordRegex.test(password)) {
@@ -28,18 +30,77 @@ const Register = () => {
       return;
     }
     setPasswordError("");
+    createAccount(email, password)
+      .then((result) => {
+        // save user in db
+        const userProfile = {
+          email,
+          ...data,
+          creationTime: result.user?.metadata?.creationTime,
+          lastSignInTime: result.user?.metadata?.lastSignInTime,
+          uid: result.user?.uid,
+        };
+        fetch("http://localhost:5000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userProfile),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.insertedId) {
+              setErrorMessage("");
+              toast.success("Registration Successful");
+              setRefresh(!refresh);
+              navigate(location?.state || "/");
+            }
+          });
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+        toast.error("Registration Failed");
+      });
+    setErrorMessage("");
   };
 
-  const handleGoogleRegister = () => {
+  const handleGoogleLogin = () => {
     googleLogin()
-      .then((res) => {
-        if (res.user) {
-          toast.success("Google Register succesfull");
-        }
-        setErrorMessage('')
+      .then((result) => {
+        const user = result.user;
+        const userProfile = {
+          email: user?.email,
+          name: user?.displayName,
+          photo: user?.photoURL,
+          creationTime: user?.metadata?.creationTime,
+          lastSignInTime: user?.metadata?.lastSignInTime,
+          uid: user?.uid,
+        };
+        fetch("http://localhost:5000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userProfile),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.insertedId) {
+              setRefresh(!refresh);
+              setErrorMessage("");
+            }
+          });
+        setErrorMessage("");
+        navigate(location?.state || "/");
+        toast.success("Registration Successful");
       })
-      .then((err) => {
-        setErrorMessage(err.message)
+      .catch((error) => {
+        setErrorMessage(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Failed...",
+          text: error.message,
+        });
       });
   };
 
@@ -51,7 +112,6 @@ const Register = () => {
           alt="Food Cart Logo"
           className="w-20 h-20 mb-4 rounded-full border-4 border-primary/20 bg-white object-contain"
         />
-        {/* {foodLottie && <Lottie animationData={foodLottie} className="w-24 h-24 mb-4" />} */}
         <h2 className="text-2xl font-bold text-primary mb-6">
           Create Your Account
         </h2>
@@ -90,26 +150,26 @@ const Register = () => {
             className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
             required
           />
-            <div className="mb-4 relative ">
-              <p
-                onClick={() => setShowPass(!showPass)}
-                className="absolute right-8 bottom-4 cursor-pointer"
-              >
-                {showPass ? (
-                  <FaRegEyeSlash size={20} />
-                ) : (
-                  <FaRegEye size={20} />
-                )}
-              </p>
-              <input
-                type={showPass ? "text" : "password"}
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
-                required
-              />
-            </div>
+          <div className="mb-4 relative ">
+            <p
+              onClick={() => setShowPass(!showPass)}
+              className="absolute right-8 bottom-4 cursor-pointer"
+            >
+              {showPass ? (
+                <FaRegEyeSlash size={20} />
+              ) : (
+                <FaRegEye size={20} />
+              )}
+            </p>
+            <input
+              type={showPass ? "text" : "password"}
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              className="w-full px-4 py-3 rounded-lg border border-primary/20 focus:outline-none focus:border-primary text-gray-700"
+              required
+            />
+          </div>
           <input
             name="address"
             type="text"
@@ -137,7 +197,7 @@ const Register = () => {
           <div className="flex-1 h-px bg-primary/20"></div>
         </div>
         <button
-          onClick={handleGoogleRegister}
+          onClick={handleGoogleLogin}
           className="w-full cursor-pointer flex items-center justify-center gap-3 border border-primary/30 py-3 rounded-lg font-semibold text-primary bg-white"
         >
           <FcGoogle className="text-2xl" />

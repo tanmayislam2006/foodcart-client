@@ -18,6 +18,7 @@ const allItems = [
         display: "populer",
         rating: 4.7,
         stock: 15
+        
     },
     {
         id: "item-3",

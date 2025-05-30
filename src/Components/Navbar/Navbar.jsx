@@ -15,13 +15,12 @@ import FoodCartContext from "../../Context/FoodCartContext";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { firebaseUser, logoutUser } = use(FoodCartContext);
+  const { user, logoutUser } = use(FoodCartContext);
   const handleLogOut = () => {
     logoutUser()
-      .then((res) => toast.success("LogOut Succesfully",`${res?.user?.displayName}`))
-      .then((err) => console.log(err));
-  };
+      .then((res) => toast.success("LogOut Succesfully",`${res?.user?.name}`))
 
+  };
   return (
     <>
       {/* Top Navbar */}
@@ -71,7 +70,7 @@ const Navbar = () => {
                 About
               </NavLink>
             </li>
-            {firebaseUser && (
+            {user && (
               <>
                 <li>
                   <NavLink
@@ -113,7 +112,7 @@ const Navbar = () => {
             )}
           </ul>
           {/* Auth Buttons */}
-          {firebaseUser ? (
+          {user ? (
             <div className="dropdown dropdown-end mr-5 hidden md:block cursor-pointer">
               <div
                 tabIndex={0}
@@ -121,10 +120,10 @@ const Navbar = () => {
                 className="btn btn-ghost btn-circle avatar relative group"
               >
                 <div className="w-10 rounded-full">
-                  <img alt="user" src={firebaseUser?.photoURL} />
+                  <img alt="user" src={user?.photo} />
                 </div>
                 <p className="absolute left-1/2 -translate-x-1/2 -bottom-10  bg-gray-800 text-white text-xs rounded px-3 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">
-                  {firebaseUser?.displayName}
+                  {user?.name}
                 </p>
               </div>
               <ul
@@ -236,10 +235,10 @@ const Navbar = () => {
                 className="btn btn-ghost btn-circle avatar relative group"
               >
                 <div className="w-10 rounded-full">
-                  <img alt="user" src={firebaseUser?.photoURL} />
+                  <img alt="user" src={user?.photo} />
                 </div>
                 <p className="absolute left-1/2 -translate-x-1/2 -bottom-10  bg-gray-800 text-white text-xs rounded px-3 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-50">
-                  {firebaseUser?.displayName}
+                  {user?.name}
                 </p>
               </div>
             </label>
@@ -282,7 +281,7 @@ const Navbar = () => {
                     <FaInfoCircle className="inline mr-2 text-2xl" /> About
                   </NavLink>
                 </li>
-                {firebaseUser && (
+                {user && (
                   <>
                     <li>
                       <NavLink
@@ -332,7 +331,7 @@ const Navbar = () => {
                     </li>
                   </>
                 )}
-                {!firebaseUser && (
+                {!user && (
                   <li>
                     <Link
                       to="/login"
@@ -376,7 +375,7 @@ const Navbar = () => {
               <span className="text-xs">Menu</span>
             </NavLink>
           </li>
-          {!firebaseUser && (
+          {!user && (
             <li>
               <NavLink
                 to="/about"
@@ -391,7 +390,7 @@ const Navbar = () => {
               </NavLink>
             </li>
           )}
-          {firebaseUser && (
+          {user && (
             <>
               <li>
                 <NavLink
