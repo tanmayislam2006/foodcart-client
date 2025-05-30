@@ -1,16 +1,33 @@
-import React, { use } from "react";
+import React, { use, useEffect, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { FaEye, FaTrashAlt, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router";
 
 const Cart = () => {
-  const { cartItems, removeFromCart } = use(FoodCartContext);
+  const { user, removeFromCart } = use(FoodCartContext);
+  // using frinted code show cart item
+  const [cartItems, setCartItems] = useState([]);
+
+  // Fetch cart items from database
+  useEffect(() => {
+    if (user) {
+      fetch(`http://localhost:5000/cart/${user?.uid}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCartItems(data || []);
+        });
+    } else {
+      setCartItems([]);
+    }
+  }, [user]);
 
   const total = cartItems.length
-    ? cartItems.reduce(
-        (sum, item) => sum + parseFloat(item.price) * (item.quantity || 1),
-        0
-      ).toFixed(2)
+    ? cartItems
+        .reduce(
+          (sum, item) => sum + parseFloat(item.price) * (item.quantity || 1),
+          0
+        )
+        .toFixed(2)
     : "0.00";
 
   return (
@@ -43,7 +60,10 @@ const Cart = () => {
                 </tr>
               ) : (
                 cartItems.map((cart, idx) => (
-                  <tr key={idx} className="border-b border-gray-100 hover:bg-primary/5 transition">
+                  <tr
+                    key={idx}
+                    className="border-b border-gray-100 hover:bg-primary/5 transition"
+                  >
                     {/* Image */}
                     <td className="py-3 px-4">
                       {cart?.image ? (
@@ -66,7 +86,10 @@ const Cart = () => {
                     </td>
                     {/* Price */}
                     <td className="py-3 px-4 text-primary font-bold">
-                      ${(parseFloat(cart.price) * (cart.quantity || 1)).toFixed(2)}
+                      $
+                      {(parseFloat(cart.price) * (cart.quantity || 1)).toFixed(
+                        2
+                      )}
                     </td>
                     {/* Action */}
                     <td className="py-3 px-4 text-center space-x-4">
@@ -115,12 +138,17 @@ const Cart = () => {
                     </div>
                   )}
                   <div>
-                    <span className="block font-semibold text-gray-800">{cart.name}</span>
+                    <span className="block font-semibold text-gray-800">
+                      {cart.name}
+                    </span>
                     <span className="block text-sm text-gray-500">
                       Qty: {cart.quantity || 1}
                     </span>
                     <span className="block text-primary font-bold">
-                      ${(parseFloat(cart.price) * (cart.quantity || 1)).toFixed(2)}
+                      $
+                      {(parseFloat(cart.price) * (cart.quantity || 1)).toFixed(
+                        2
+                      )}
                     </span>
                   </div>
                 </div>

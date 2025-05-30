@@ -10,16 +10,15 @@ import {
 const googleProvider = new GoogleAuthProvider();
 import auth from "../Firebase/firebase.init.js";
 import FoodCartContext from "./FoodCartContext.jsx";
-import allItems from "./menu.jsx";
 const GreenProvider = ({ children }) => {
   const [firebaseUser, setFirebaseUser] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  const [refresh,setRefresh]=useState(false)
-  const [cartItems,setCartItems]=useState([])
-  // temporay data all food items 
-  const [foodItemsAll,setFoodItemsAll]=useState([])
+  const [refresh, setRefresh] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  // temporay data all food items
+  const [foodItemsAll, setFoodItemsAll] = useState([]);
   const createAccount = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
@@ -44,16 +43,16 @@ const GreenProvider = ({ children }) => {
       unsubscribe();
     };
   }, []);
-  useEffect(()=>{
-    fetch("http://localhost:5000/allMenu").then(res=>res.json()).then(menuData=>{
-      setFoodItemsAll(menuData)
-    })
-  },[])
+  useEffect(() => {
+    fetch("http://localhost:5000/allMenu")
+      .then((res) => res.json())
+      .then((menuData) => {
+        setFoodItemsAll(menuData);
+      });
+  }, []);
   useEffect(() => {
     if (firebaseUser?.uid) {
-      fetch(
-        `http://localhost:5000/user/${firebaseUser?.uid}`
-      )
+      fetch(`http://localhost:5000/user/${firebaseUser?.uid}`)
         .then((res) => res.json())
         .then((data) => {
           setUser(data);
@@ -62,7 +61,7 @@ const GreenProvider = ({ children }) => {
     } else {
       setUser(null);
     }
-  }, [firebaseUser,refresh]);
+  }, [firebaseUser, refresh]);
   const sharedData = {
     firebaseUser,
     loading,
@@ -80,7 +79,7 @@ const GreenProvider = ({ children }) => {
     cartItems,
     setCartItems,
     foodItemsAll,
-    setFoodItemsAll
+    setFoodItemsAll,
   };
   return <FoodCartContext value={sharedData}>{children}</FoodCartContext>;
 };

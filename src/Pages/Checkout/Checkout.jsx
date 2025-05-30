@@ -1,8 +1,23 @@
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 
 const Checkout = () => {
-  const { cartItems, setCartItems } = use(FoodCartContext);
+  const {user } = use(FoodCartContext);
+    // using frinted code show cart item
+    const [cartItems, setCartItems] = useState([]);
+  
+    // Fetch cart items from database
+    useEffect(() => {
+      if (user) {
+        fetch(`http://localhost:5000/cart/${user?.uid}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setCartItems(data || []);
+          });
+      } else {
+        setCartItems([]);
+      }
+    }, [user]);
 
   const total = cartItems.length
     ? cartItems

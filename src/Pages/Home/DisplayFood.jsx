@@ -1,71 +1,82 @@
-import React, { use } from "react";
+import React, { use, useEffect, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const DisplayFood = () => {
-  const {cartItems, setCartItems, foodItemsAll } = use(FoodCartContext);
-  const foodItems = foodItemsAll.filter((items) => items?.display == "populer");
-  const handleOrderNow = (item) => {
-  //   axios.post("http://localhost:5000/cart", { ...item})
-  // .then(res => console.log(res))
-  // .catch(err => console.log(err));
-    // fetch("http://localhost:5000/cart", {
-    //   method: "POST",
-    //   headers: {
-    //     "content-type": "application/json",
-    //   },
-    //   body: JSON.stringify(item),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //   })
-    const isExist = cartItems.find((i) => i._id == item._id);
-    if (isExist) {
-      isExist.quantity += 1;
-      const remainningItems = cartItems.filter((i) => i._id !== item._id);
-      console.log(isExist,"this is remaing itrms ");
-      setCartItems([...remainningItems, isExist]);
-    fetch("http://localhost:5000/cart", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(isExist),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
+  const { foodItemsAll, user } = use(FoodCartContext);
+  const [cartItems, setCartItems] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const foodItems = foodItemsAll.filter((items) => items?.display === "populer");
 
+  // Fetch cart items from database
+  useEffect(() => {
+    if (user) {
+      fetch(`http://localhost:5000/cart/${user?.uid}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCartItems(data || []);
+        });
     } else {
-      item.quantity = 1;
-      const cart = [...cartItems, item];
-      setCartItems(cart);
-      toast.success("Order Placed Succesfully");
+      setCartItems([]);
     }
-        fetch("http://localhost:5000/cart", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(item),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+  }, [user, refresh]);
+
+  const handleOrderNow = (item) => {
+    if (!user) {
+      toast.error("Please login to add items to cart");
+      return;
+    }
+    const { _id, ...allInfo } = item;
+    const addToCartItem = {
+      dishId: _id,
+      ...allInfo,
+      uid: user?.uid,
+      quantity: 1,
+    };
+
+    // Check if item already exists in cart
+    const isExist = cartItems.find((i) => i.dishId === item._id);
+
+    if (isExist) {
+      // Only update quantity using PUT
+      fetch(`http://localhost:5000/cart/${_id}`, {
+        method: "PUT",
       })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.modifiedCount) {
+            toast.success("Quantity increased in cart");
+            setRefresh((prev) => !prev);
+          }
+        });
+    } else {
+      // Add new item using POST
+      fetch("http://localhost:5000/cart", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(addToCartItem),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.insertedId) {
+            toast.success("Order Success! Check Cart");
+            setRefresh((prev) => !prev);
+          }
+        });
+    }
   };
+
   return (
     <div className="w-full py-8 px-2 md:px-0">
-      <h2 className="text-3xl md:text-4xl font-extrabold text-center  text-primary mb-2">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-center text-primary mb-2">
         Popular Dishes
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 my-6">
-        {foodItems.map((item, idx) => (
+        {foodItems.map((item) => (
           <div
-            key={idx}
+            key={item.id || item._id}
             className="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center"
           >
             <img
@@ -76,14 +87,12 @@ const DisplayFood = () => {
             <h3 className="text-lg font-semibold text-gray-800 mb-1">
               {item.name}
             </h3>
-            <p className="text-primary font-bold mb-2">{item.price}</p>
+            <p className="text-primary font-bold mb-2">${item.price}</p>
             <p className="text-gray-500 text-sm text-center mb-4">
               {item.desc}
             </p>
             <button
-              onClick={() => {
-                handleOrderNow(item);
-              }}
+              onClick={() => handleOrderNow(item)}
               className="cursor-pointer flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-full font-semibold text-sm"
             >
               <svg
