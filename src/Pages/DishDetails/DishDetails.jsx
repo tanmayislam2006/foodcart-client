@@ -5,8 +5,9 @@ import { FaStar, FaPlus, FaMinus } from "react-icons/fa";
 
 const DishDetails = () => {
   const { foodItemsAll, cartItems, setCartItems } = use(FoodCartContext);
+  console.log(foodItemsAll);
   const { id } = useParams();
-  const dish = foodItemsAll.find(item => item.id === id);
+  const dish = foodItemsAll.find(item => item._id === id);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -19,10 +20,10 @@ const DishDetails = () => {
   }
 
   const handleAddToCart = () => {
-    const isExist = cartItems.find(i => i.id === dish.id);
+    const isExist = cartItems.find(i => i._id === dish._id);
     if (isExist) {
       isExist.quantity += quantity;
-      const remainingItems = cartItems.filter(i => i.id !== dish.id);
+      const remainingItems = cartItems.filter(i => i._id !== dish._id);
       setCartItems([...remainingItems, isExist]);
     } else {
       setCartItems([...cartItems, { ...dish, quantity }]);

@@ -21,10 +21,10 @@ const DisplayFood = () => {
     //   .then((data) => {
     //     console.log(data);
     //   })
-    const isExist = cartItems.find((i) => i.id == item.id);
+    const isExist = cartItems.find((i) => i._id == item._id);
     if (isExist) {
       isExist.quantity += 1;
-      const remainningItems = cartItems.filter((i) => i.id !== item.id);
+      const remainningItems = cartItems.filter((i) => i._id !== item._id);
       console.log(isExist,"this is remaing itrms ");
       setCartItems([...remainningItems, isExist]);
     fetch("http://localhost:5000/cart", {

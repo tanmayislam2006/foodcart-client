@@ -19,7 +19,7 @@ const GreenProvider = ({ children }) => {
   const [refresh,setRefresh]=useState(false)
   const [cartItems,setCartItems]=useState([])
   // temporay data all food items 
-  const [foodItemsAll,setFoodItemsAll]=useState([...allItems])
+  const [foodItemsAll,setFoodItemsAll]=useState([])
   const createAccount = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
@@ -44,6 +44,11 @@ const GreenProvider = ({ children }) => {
       unsubscribe();
     };
   }, []);
+  useEffect(()=>{
+    fetch("http://localhost:5000/allMenu").then(res=>res.json()).then(menuData=>{
+      setFoodItemsAll(menuData)
+    })
+  },[])
   useEffect(() => {
     if (firebaseUser?.uid) {
       fetch(

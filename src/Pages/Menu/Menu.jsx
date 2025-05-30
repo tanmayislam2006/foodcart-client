@@ -1,16 +1,18 @@
 import React, { use, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router";
 
 const categories = ["All", "Breakfast", "Lunch", "Dinner"];
 
 const Menu = () => {
   const { cartItems, setCartItems, foodItemsAll } = use(FoodCartContext);
+  const navigate =useNavigate()
   const handleOrderNow = (item) => {
-    const isExist = cartItems.find((i) => i.id == item.id);
+    const isExist = cartItems.find((i) => i._id == item._id);
     if (isExist) {
       isExist.quantity += 1;
-      const remainningItems = cartItems.filter((i) => i.id !== item.id);
+      const remainningItems = cartItems.filter((i) => i._id !== item._id);
 
       setCartItems([...remainningItems, isExist]);
     } else {
@@ -69,7 +71,9 @@ const Menu = () => {
                 {item.desc}
               </p>
               <div className="flex gap-3 w-full">
-                <button className="cursor-pointer flex-1 border border-primary text-primary px-4 py-2 rounded-full font-semibold text-sm">
+                <button
+                onClick={()=>navigate(`/dishDetails/${item._id}`)}
+                className="cursor-pointer flex-1 border border-primary text-primary px-4 py-2 rounded-full font-semibold text-sm">
                   Details
                 </button>
                 <button
