@@ -11,6 +11,7 @@ import Cart from "../Pages/Cart/Cart";
 import Checkout from "../Pages/Checkout/Checkout";
 import DishDetails from "../Pages/DishDetails/DishDetails";
 import Order from "../Pages/Order/Order";
+import Update from "../Pages/Update/Update";
 
 const router=createBrowserRouter([
     {
@@ -64,6 +65,12 @@ const router=createBrowserRouter([
                 path:"/order",
                 element:<PrivateRouter>
                     <Order/>
+                </PrivateRouter>
+            },
+            {
+                path:"/updateDish/:id",
+                element:<PrivateRouter>
+                    <Update/>
                 </PrivateRouter>
             }
 
