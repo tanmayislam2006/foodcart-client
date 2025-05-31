@@ -43,7 +43,7 @@ const Checkout = () => {
       uid: user?.uid,
     };
     // https://food-cart-server.onrender.com
-    fetch("http://localhost:5000/order", {
+    fetch("https://food-cart-server.onrender.com/order", {
       method: "POST",
       headers: {
         "content-type": "application/json",
