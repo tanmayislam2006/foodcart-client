@@ -17,7 +17,7 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         // check user from database
-        fetch(`http://localhost:5000/user/${user?.uid}`)
+        fetch(`https://food-cart-server.onrender.com/user/${user?.uid}`)
           .then((res) => res.json())
           .then((data) => {
             const availableUser = data?.user;
@@ -31,7 +31,7 @@ const Login = () => {
                 lastSignInTime: user?.metadata?.lastSignInTime,
                 uid: user?.uid,
               };
-              fetch("http://localhost:5000/register", {
+              fetch("https://food-cart-server.onrender.com/register", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const Login = () => {
           });
         if (user) {
           // update log in information   in db
-          fetch("http://localhost:5000/login", {
+          fetch("https://food-cart-server.onrender.com/login", {
             method: "PATCH",
             headers: {
               "content-type": "application/json",
@@ -90,7 +90,7 @@ const Login = () => {
         const user = result.user;
         if (user) {
           // update information in db
-          fetch("http://localhost:5000/login", {
+          fetch("https://food-cart-server.onrender.com/login", {
             method: "PATCH",
             headers: {
               "content-type": "application/json",

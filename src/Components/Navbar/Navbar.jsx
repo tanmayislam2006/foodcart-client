@@ -10,6 +10,7 @@ import {
   FaSignOutAlt,
   FaTachometerAlt,
   FaCreditCard,
+  FaBoxOpen,
 } from "react-icons/fa";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { toast } from "react-toastify";
@@ -106,6 +107,18 @@ const Navbar = () => {
                     }
                   >
                     <FaCreditCard className="inline" /> Checkout
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/order"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "font-bold text-primary underline flex items-center gap-1"
+                        : "text-gray-700 font-semibold flex items-center gap-1"
+                    }
+                  >
+                    <FaBoxOpen className="inline" /> Order
                   </NavLink>
                 </li>
               </>
@@ -319,6 +332,19 @@ const Navbar = () => {
                       >
                         <FaCreditCard className="inline mr-2 text-2xl" />{" "}
                         Checkout
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/order"
+                        className={({ isActive }) =>
+                          isActive
+                            ? "font-bold text-primary underline"
+                            : "text-gray-700 font-semibold"
+                        }
+                      >
+                        <FaBoxOpen className="inline mr-2 text-2xl" />{" "}
+                       Order
                       </NavLink>
                     </li>
                     <li>

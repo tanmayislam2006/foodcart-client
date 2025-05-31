@@ -9,7 +9,7 @@ const Checkout = () => {
     // Fetch cart items from database
     useEffect(() => {
       if (user) {
-        fetch(`http://localhost:5000/cart/${user?.uid}`)
+        fetch(`https://food-cart-server.onrender.com/cart/${user?.uid}`)
           .then((res) => res.json())
           .then((data) => {
             setCartItems(data || []);

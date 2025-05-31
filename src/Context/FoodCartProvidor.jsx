@@ -44,7 +44,7 @@ const GreenProvider = ({ children }) => {
     };
   }, []);
   useEffect(() => {
-    fetch("http://localhost:5000/allMenu")
+    fetch("https://food-cart-server.onrender.com/allMenu")
       .then((res) => res.json())
       .then((menuData) => {
         setFoodItemsAll(menuData);
@@ -52,7 +52,7 @@ const GreenProvider = ({ children }) => {
   }, []);
   useEffect(() => {
     if (firebaseUser?.uid) {
-      fetch(`http://localhost:5000/user/${firebaseUser?.uid}`)
+      fetch(`https://food-cart-server.onrender.com/user/${firebaseUser?.uid}`)
         .then((res) => res.json())
         .then((data) => {
           setUser(data);
