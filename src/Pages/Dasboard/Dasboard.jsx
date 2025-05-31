@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
-import { FaPen, FaTrash } from "react-icons/fa";
+import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import FoodCartContext from "./../../Context/FoodCartContext"; // Ensure this path is correct
 import BouncingLoader from "../../Components/Loader/BouncingLoader"; // Adjust path as needed
 
@@ -34,7 +34,7 @@ const Dashboard = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://green-connect-server.onrender.com/deleteDish/${id}`, {
+        fetch(`https://food-cart-server.onrender.com/deleteDish/${id}`, {
           // Updated API endpoint
           method: "DELETE",
         })
@@ -89,7 +89,7 @@ const Dashboard = () => {
       )}
 
       {/* Big device table */}
-      {!loading  && myDishes.length > 0 && (
+      {!loading && myDishes.length > 0 && (
         <div className="w-full max-w-4xl rounded-lg shadow-lg overflow-x-auto border border-gray-200 hidden md:block">
           {/* Style */}
           <div className="flex items-center shadow gap-2 px-4 py-2 bg-gray-100 border-b border-gray-200">
@@ -109,54 +109,50 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {myDishes.map(
-                (
-                  dish
-                ) => (
-                  <tr
-                    key={dish._id}
-                    className="border-b border-gray-100 dark:text-white text-center"
-                  >
-                    <td className="py-3 px-4 align-middle">
-                      {dish?.image ? ( // Changed from imageUrl to image
-                        <img
-                          src={dish.image}
-                          alt={dish.name} // Changed from title to name
-                          className="w-14 h-14 object-cover rounded-md shadow mx-auto"
-                        />
-                      ) : (
-                        <div className="w-14 h-14 flex items-center justify-center bg-gray-200 rounded-md shadow text-gray-400 text-xs mx-auto">
-                          No Image
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 font-semibold align-middle">
-                      {dish.name} {/* Changed from title to name */}
-                    </td>
-                    <td className="py-3 px-4 align-middle">{dish.category}</td>
-                    <td className="py-3 px-4 align-middle">
-                      {dish.orderCount || 0}
-                    </td>
-                    <td className="py-3 px-4 align-middle">
-                      ${parseFloat(dish.price).toFixed(2)}
-                    </td>
-                    <td className="px-4 py-2 align-middle">
-                      <button
-                        onClick={() => navigate(`/updateDish/${dish._id}`)}
-                        className="text-yellow-500 cursor-pointer mx-3 my-2"
-                      >
-                        <FaPen size={20} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(dish._id)}
-                        className="text-red-500 cursor-pointer"
-                      >
-                        <FaTrash size={20} />
-                      </button>
-                    </td>
-                  </tr>
-                )
-              )}
+              {myDishes.map((dish) => (
+                <tr
+                  key={dish._id}
+                  className="border-b border-gray-100 dark:text-white text-center"
+                >
+                  <td className="py-3 px-4 align-middle">
+                    {dish?.image ? ( // Changed from imageUrl to image
+                      <img
+                        src={dish.image}
+                        alt={dish.name} // Changed from title to name
+                        className="w-14 h-14 object-cover rounded-md shadow mx-auto"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 flex items-center justify-center bg-gray-200 rounded-md shadow text-gray-400 text-xs mx-auto">
+                        No Image
+                      </div>
+                    )}
+                  </td>
+                  <td className="py-3 px-4 font-semibold align-middle">
+                    {dish.name} {/* Changed from title to name */}
+                  </td>
+                  <td className="py-3 px-4 align-middle">{dish.category}</td>
+                  <td className="py-3 px-4 align-middle">
+                    {dish.orderCount || 0}
+                  </td>
+                  <td className="py-3 px-4 align-middle">
+                    ${parseFloat(dish.price).toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 align-middle">
+                    <button
+                      onClick={() => navigate(`/updateDish/${dish._id}`)}
+                      className="text-yellow-500 cursor-pointer mx-3 my-2"
+                    >
+                      <FaPen size={20} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(dish._id)}
+                      className="text-red-500 cursor-pointer"
+                    >
+                      <FaTrash size={20} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -213,6 +209,12 @@ const Dashboard = () => {
           ))}
         </div>
       )}
+      <div className="md:min-w-3xl lg:min-w-4xl flex justify-end mt-10">
+        <Link to='/addDish' className="btn btn-primary font-bold text-white ">
+          <FaPlus />
+          Add Dish
+        </Link>
+      </div>
     </div>
   );
 };

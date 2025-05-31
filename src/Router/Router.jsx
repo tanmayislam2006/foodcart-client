@@ -12,6 +12,7 @@ import Checkout from "../Pages/Checkout/Checkout";
 import DishDetails from "../Pages/DishDetails/DishDetails";
 import Order from "../Pages/Order/Order";
 import Update from "../Pages/Update/Update";
+import AddDish from "../Pages/AddDish/AddDish";
 
 const router=createBrowserRouter([
     {
@@ -71,6 +72,12 @@ const router=createBrowserRouter([
                 path:"/updateDish/:id",
                 element:<PrivateRouter>
                     <Update/>
+                </PrivateRouter>
+            },
+            {
+                path:"/addDish",
+                element:<PrivateRouter>
+                    <AddDish/>
                 </PrivateRouter>
             }
 
