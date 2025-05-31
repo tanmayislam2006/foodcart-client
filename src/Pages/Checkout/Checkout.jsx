@@ -1,23 +1,25 @@
 import React, { use, useEffect, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
+import { toast } from "react-toastify";
 
 const Checkout = () => {
-  const {user } = use(FoodCartContext);
-    // using frinted code show cart item
-    const [cartItems, setCartItems] = useState([]);
-  
-    // Fetch cart items from database
-    useEffect(() => {
-      if (user) {
-        fetch(`https://food-cart-server.onrender.com/cart/${user?.uid}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setCartItems(data || []);
-          });
-      } else {
-        setCartItems([]);
-      }
-    }, [user]);
+  const { user } = use(FoodCartContext);
+  const [cartItems, setCartItems] = useState([]);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // Fetch cart items from database
+  useEffect(() => {
+    if (user) {
+      fetch(`https://food-cart-server.onrender.com/cart/${user?.uid}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCartItems(data || []);
+        });
+    } else {
+      setCartItems([]);
+    }
+  }, [user]);
 
   const total = cartItems.length
     ? cartItems
@@ -27,19 +29,48 @@ const Checkout = () => {
         )
         .toFixed(2)
     : "0.00";
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
     const form = e.target;
     const formData = new FormData(form);
     const orderData = Object.fromEntries(formData.entries());
-    console.log(orderData);
-    setError("");
-    setSuccess("");
-    setCartItems([]);
-    setSuccess("Order placed successfully! Thank you for choosing Food Cart.");
+    const orderInfo = {
+      ...orderData,
+      cartItems,
+      uid: user?.uid,
+    };
+    // https://food-cart-server.onrender.com
+    fetch("http://localhost:5000/order", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(orderInfo),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.insertedId) {
+          toast.success(
+            "Order placed successfully! Thank you for choosing Food Cart."
+          );
+          setCartItems([]);
+          setSuccess(
+            "Order placed successfully! Thank you for choosing Food Cart."
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Failed to place order. Please try again.");
+      });
+
+    // reset user cart items
+    fetch(`https://food-cart-server.onrender.com/resetCart/${user?.uid}`, {
+      method: "DELETE",
+    })
   };
 
   return (
@@ -74,7 +105,10 @@ const Checkout = () => {
                       Quantity: {item.quantity || 1}
                     </div>
                     <div className="text-primary font-bold">
-                      ${(parseFloat(item.price) * (item.quantity || 1)).toFixed(2)}
+                      $
+                      {(parseFloat(item.price) * (item.quantity || 1)).toFixed(
+                        2
+                      )}
                     </div>
                   </div>
                 </div>
