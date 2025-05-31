@@ -6,6 +6,7 @@ const categories = ["All", "Breakfast", "Lunch", "Dinner"];
 
 const Menu = () => {
   const { foodItemsAll } = use(FoodCartContext);
+  
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("All");
 
