@@ -22,7 +22,7 @@ const AddDish = () => {
         }
       })
       .catch((err) => console.log(err));
-    // form.reset()
+    form.reset()
   };
   return (
     <div className="min-h-screen  flex items-center justify-center p-4 sm:p-6 lg:p-8">

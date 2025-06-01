@@ -11,6 +11,8 @@ const Dashboard = () => {
   const [myDishes, setMyDishes] = useState([]); // Changed from myTips to myDishes
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [orderedUsers, setOrderedUser] = useState([]);
+
   const navigate = useNavigate();
   useEffect(() => {
     setLoading(true);
@@ -22,6 +24,12 @@ const Dashboard = () => {
         setLoading(false);
       });
   }, [user?.uid, refresh]);
+  const handleOrdedDisDetails = (dishID) => {
+    fetch(`https://food-cart-server.onrender.com/dishOrders/${dishID}`)
+      .then((res) => res.json())
+      .then((data) => setOrderedUser(data))
+      .catch((err) => console.log(err));
+  };
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -132,7 +140,16 @@ const Dashboard = () => {
                   </td>
                   <td className="py-3 px-4 align-middle">{dish.category}</td>
                   <td className="py-3 px-4 align-middle">
-                    {dish.orderCount || 0}
+                    <button
+                      onClick={() => {
+                        handleOrdedDisDetails(`${dish._id}`);
+                        document.getElementById("my_modal_1").showModal();
+                      }}
+                      className="btn"
+                    >
+                      {" "}
+                      {dish.orderCount || 0}
+                    </button>
                   </td>
                   <td className="py-3 px-4 align-middle">
                     ${parseFloat(dish.price).toFixed(2)}
@@ -157,6 +174,45 @@ const Dashboard = () => {
           </table>
         </div>
       )}
+      <dialog id="my_modal_1" className="modal">
+        <div className="modal-box max-w-2xl">
+          <h3 className="font-bold text-2xl text-center text-primary mb-4">
+            Dish Order Details
+          </h3>
+
+          <div className="text-center text-lg mb-2">
+            <span className="font-semibold">Dish:</span> Dish
+          </div>
+
+          {/* User List */}
+          <div className="max-h-64 overflow-y-auto rounded-md border p-4 bg-base-100 shadow-inner">
+            {orderedUsers?.length > 0 ? (
+              <ul className="space-y-3">
+                {orderedUsers.map((user, idx) => (
+                  <li key={user._id} className="border-b pb-2">
+                    <p className="font-semibold text-accent">
+                      {idx + 1}. {user.name}
+                    </p>
+                    <p className="text-sm text-gray-500">Email: {user.email}</p>
+                    {/* Optional: <p>Order count: {user.orderCount}</p> */}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-center text-sm text-gray-400">
+                No users have ordered this dish yet.
+              </p>
+            )}
+          </div>
+
+          {/* Action Button */}
+          <div className="modal-action mt-6">
+            <form method="dialog">
+              <button className="btn btn-primary">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
 
       {/* Mobile card view */}
       {!loading && !error && myDishes.length > 0 && (
@@ -183,7 +239,17 @@ const Dashboard = () => {
                   {/* Changed from title to name */}
                   <div className="text-sm">{dish.category}</div>
                   <div className="text-sm">
-                    Order Count: {dish.orderCount || 0}
+                    order Count{" "}
+                    <button
+                      onClick={() => {
+                        handleOrdedDisDetails(`${dish._id}`);
+                        document.getElementById("my_modal_1").showModal();
+                      }}
+                      className="btn"
+                    >
+                      {" "}
+                      {dish.orderCount || 0}
+                    </button>
                   </div>
                   <div className="text-sm">
                     Price: ${parseFloat(dish.price).toFixed(2)}{" "}
@@ -210,7 +276,7 @@ const Dashboard = () => {
         </div>
       )}
       <div className="md:min-w-3xl lg:min-w-4xl flex justify-end mt-10">
-        <Link to='/addDish' className="btn btn-primary font-bold text-white ">
+        <Link to="/addDish" className="btn btn-primary font-bold text-white ">
           <FaPlus />
           Add Dish
         </Link>
