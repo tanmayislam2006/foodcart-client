@@ -11,7 +11,7 @@ const Checkout = () => {
   // Fetch cart items from database
   useEffect(() => {
     if (user) {
-      fetch(`https://food-cart-server.onrender.com/cart/${user?.uid}`)
+      fetch(`http://localhost:5000/cart/${user?.uid}`)
         .then((res) => res.json())
         .then((data) => {
           setCartItems(data || []);
@@ -42,8 +42,8 @@ const Checkout = () => {
       cartItems,
       uid: user?.uid,
     };
-    // https://food-cart-server.onrender.com
-    fetch("https://food-cart-server.onrender.com/order", {
+    // http://localhost:5000
+    fetch("http://localhost:5000/order", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -68,7 +68,7 @@ const Checkout = () => {
       });
 
     // reset user cart items
-    fetch(`https://food-cart-server.onrender.com/resetCart/${user?.uid}`, {
+    fetch(`http://localhost:5000/resetCart/${user?.uid}`, {
       method: "DELETE",
     })
   };

@@ -17,7 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch(`https://food-cart-server.onrender.com/allMenu?uid=${user?.uid}`) // Updated API endpoint
+    fetch(`http://localhost:5000/allMenu?uid=${user?.uid}`) // Updated API endpoint
       .then((res) => res.json())
       .then((data) => {
         setMyDishes(data); // Set myDishes
@@ -25,7 +25,7 @@ const Dashboard = () => {
       });
   }, [user?.uid, refresh]);
   const handleOrdedDisDetails = (dishID) => {
-    fetch(`https://food-cart-server.onrender.com/dishOrders/${dishID}`)
+    fetch(`http://localhost:5000/dishOrders/${dishID}`)
       .then((res) => res.json())
       .then((data) => setOrderedUser(data))
       .catch((err) => console.log(err));
@@ -42,7 +42,7 @@ const Dashboard = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://food-cart-server.onrender.com/deleteDish/${id}`, {
+        fetch(`http://localhost:5000/deleteDish/${id}`, {
           // Updated API endpoint
           method: "DELETE",
         })
@@ -83,7 +83,6 @@ const Dashboard = () => {
       <h1 className="text-3xl md:text-4xl font-bold text-[#16A34A] mb-8 text-center">
         My Dishes
       </h1>
-
       {loading && (
         <div className="flex justify-center items-center h-48">
           <BouncingLoader />

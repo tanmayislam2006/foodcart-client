@@ -2,24 +2,27 @@ import React, { use, useEffect, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { FaEye, FaTrashAlt, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router";
+import useAxiosSecure from "../../hook/AxiosInseptor";
 
 const Cart = () => {
   const { user, removeFromCart } = use(FoodCartContext);
   // using frinted code show cart item
   const [cartItems, setCartItems] = useState([]);
-
+  const axiosSecure = useAxiosSecure();
   // Fetch cart items from database
   useEffect(() => {
     if (user) {
-      fetch(`https://food-cart-server.onrender.com/cart/${user?.uid}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setCartItems(data || []);
+      axiosSecure
+        .get(`http://localhost:5000/cart/${user?.uid}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          setCartItems(res.data);
         });
     } else {
       setCartItems([]);
     }
-  }, [user]);
+  }, [user, axiosSecure]);
 
   const total = cartItems.length
     ? cartItems

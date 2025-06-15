@@ -10,6 +10,7 @@ import {
 const googleProvider = new GoogleAuthProvider();
 import auth from "../Firebase/firebase.init.js";
 import FoodCartContext from "./FoodCartContext.jsx";
+import axios from "axios";
 const GreenProvider = ({ children }) => {
   const [firebaseUser, setFirebaseUser] = useState(null);
   const [user, setUser] = useState(null);
@@ -37,6 +38,13 @@ const GreenProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setFirebaseUser(currentUser);
+      if (currentUser?.uid) {
+        axios.post(
+          `http://localhost:5000/jsonwebtoken`,
+          { uid: currentUser?.uid },
+          { withCredentials: true }
+        );
+      }
       setLoading(false);
     });
     return () => {
@@ -44,7 +52,7 @@ const GreenProvider = ({ children }) => {
     };
   }, []);
   useEffect(() => {
-    fetch("https://food-cart-server.onrender.com/allMenu")
+    fetch("http://localhost:5000/allMenu")
       .then((res) => res.json())
       .then((menuData) => {
         setFoodItemsAll(menuData);
@@ -52,7 +60,7 @@ const GreenProvider = ({ children }) => {
   }, []);
   useEffect(() => {
     if (firebaseUser?.uid) {
-      fetch(`https://food-cart-server.onrender.com/user/${firebaseUser?.uid}`)
+      fetch(`http://localhost:5000/user/${firebaseUser?.uid}`)
         .then((res) => res.json())
         .then((data) => {
           setUser(data);

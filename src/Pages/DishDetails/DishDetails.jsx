@@ -33,7 +33,7 @@ const DishDetails = () => {
     };
 
     // Add new item using POST
-    fetch("https://food-cart-server.onrender.com/cart", {
+    fetch("http://localhost:5000/cart", {
       method: "POST",
       headers: {
         "content-type": "application/json",

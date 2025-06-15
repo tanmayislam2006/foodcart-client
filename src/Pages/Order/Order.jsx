@@ -10,7 +10,7 @@ const Order = () => {
 
   useEffect(() => {
     if (user?.uid) {
-      fetch(`https://food-cart-server.onrender.com/order/${user.uid}`)
+      fetch(`http://localhost:5000/order/${user.uid}`)
         .then((res) => res.json())
         .then((data) => setOrders(data || []));
     }

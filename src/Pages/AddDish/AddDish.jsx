@@ -15,7 +15,7 @@ const AddDish = () => {
       uid: user?.uid,
     };
     axios
-      .post("https://food-cart-server.onrender.com/addedDish", { ...dishInfo })
+      .post("http://localhost:5000/addedDish", { ...dishInfo })
       .then((res) => {
         if (res.data?.insertedIdinsertedId) {
           toast.success("Dish Added!");
