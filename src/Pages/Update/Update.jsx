@@ -27,7 +27,7 @@ const Update = () => {
     const formData = new FormData(form);
     const updateInfo = Object.fromEntries(formData.entries());
     axios
-      .put(`http://localhost:5000/updateDish/${id}`, {
+      .put(`https://foodcart-server-eight.vercel.app/updateDish/${id}`, {
         ...updateInfo,
       })
       .then((res) => {

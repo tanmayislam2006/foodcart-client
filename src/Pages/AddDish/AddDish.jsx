@@ -15,7 +15,7 @@ const AddDish = () => {
       uid: user?.uid,
     };
     axios
-      .post("http://localhost:5000/addedDish", { ...dishInfo })
+      .post("https://foodcart-server-eight.vercel.app/addedDish", { ...dishInfo })
       .then((res) => {
         if (res.data?.insertedIdinsertedId) {
           toast.success("Dish Added!");

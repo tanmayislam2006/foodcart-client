@@ -10,7 +10,7 @@ const Order = () => {
 
   useEffect(() => {
     if (user?.uid) {
-      fetch(`http://localhost:5000/order/${user.uid}`)
+      fetch(`https://foodcart-server-eight.vercel.app/order/${user.uid}`)
         .then((res) => res.json())
         .then((data) => setOrders(data || []));
     }

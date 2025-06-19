@@ -40,7 +40,7 @@ const GreenProvider = ({ children }) => {
       setFirebaseUser(currentUser);
       if (currentUser?.uid) {
         axios.post(
-          `http://localhost:5000/jsonwebtoken`,
+          `https://foodcart-server-eight.vercel.app/jsonwebtoken`,
           { uid: currentUser?.uid },
           { withCredentials: true }
         );
@@ -52,7 +52,7 @@ const GreenProvider = ({ children }) => {
     };
   }, []);
   useEffect(() => {
-    fetch("http://localhost:5000/allMenu")
+    fetch("https://foodcart-server-eight.vercel.app/allMenu")
       .then((res) => res.json())
       .then((menuData) => {
         setFoodItemsAll(menuData);
@@ -60,7 +60,7 @@ const GreenProvider = ({ children }) => {
   }, []);
   useEffect(() => {
     if (firebaseUser?.uid) {
-      fetch(`http://localhost:5000/user/${firebaseUser?.uid}`)
+      fetch(`https://foodcart-server-eight.vercel.app/user/${firebaseUser?.uid}`)
         .then((res) => res.json())
         .then((data) => {
           setUser(data);

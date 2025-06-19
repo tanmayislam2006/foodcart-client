@@ -17,7 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch(`http://localhost:5000/allMenu?uid=${user?.uid}`) // Updated API endpoint
+    fetch(`https://foodcart-server-eight.vercel.app/allMenu?uid=${user?.uid}`) // Updated API endpoint
       .then((res) => res.json())
       .then((data) => {
         setMyDishes(data); // Set myDishes
@@ -25,7 +25,7 @@ const Dashboard = () => {
       });
   }, [user?.uid, refresh]);
   const handleOrdedDisDetails = (dishID) => {
-    fetch(`http://localhost:5000/dishOrders/${dishID}`)
+    fetch(`https://foodcart-server-eight.vercel.app/dishOrders/${dishID}`)
       .then((res) => res.json())
       .then((data) => setOrderedUser(data))
       .catch((err) => console.log(err));
@@ -42,7 +42,7 @@ const Dashboard = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/deleteDish/${id}`, {
+        fetch(`https://foodcart-server-eight.vercel.app/deleteDish/${id}`, {
           // Updated API endpoint
           method: "DELETE",
         })

@@ -11,7 +11,7 @@ const Checkout = () => {
   // Fetch cart items from database
   useEffect(() => {
     if (user) {
-      fetch(`http://localhost:5000/cart/${user?.uid}`)
+      fetch(`https://foodcart-server-eight.vercel.app/cart/${user?.uid}`)
         .then((res) => res.json())
         .then((data) => {
           setCartItems(data || []);
@@ -42,8 +42,8 @@ const Checkout = () => {
       cartItems,
       uid: user?.uid,
     };
-    // http://localhost:5000
-    fetch("http://localhost:5000/order", {
+    // https://foodcart-server-eight.vercel.app
+    fetch("https://foodcart-server-eight.vercel.app/order", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -68,7 +68,7 @@ const Checkout = () => {
       });
 
     // reset user cart items
-    fetch(`http://localhost:5000/resetCart/${user?.uid}`, {
+    fetch(`https://foodcart-server-eight.vercel.app/resetCart/${user?.uid}`, {
       method: "DELETE",
     })
   };

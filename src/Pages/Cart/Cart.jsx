@@ -13,7 +13,7 @@ const Cart = () => {
   useEffect(() => {
     if (user) {
       axiosSecure
-        .get(`http://localhost:5000/cart/${user?.uid}`, {
+        .get(`https://foodcart-server-eight.vercel.app/cart/${user?.uid}`, {
           withCredentials: true,
         })
         .then((res) => {
