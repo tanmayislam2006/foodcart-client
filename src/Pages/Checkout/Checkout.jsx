@@ -1,9 +1,11 @@
 import React, { use, useEffect, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { toast } from "react-toastify";
+import useAxiosSecure from "./../../hook/AxiosInseptor";
 
 const Checkout = () => {
   const { user } = use(FoodCartContext);
+  const axiosSecure = useAxiosSecure();
   const [cartItems, setCartItems] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -11,15 +13,13 @@ const Checkout = () => {
   // Fetch cart items from database
   useEffect(() => {
     if (user) {
-      fetch(`https://foodcart-server-eight.vercel.app/cart/${user?.uid}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setCartItems(data || []);
-        });
+      axiosSecure
+        .get(`/cart/${user?.uid}`, { withCredentials: true })
+        .then((res) => setCartItems(res.data));
     } else {
       setCartItems([]);
     }
-  }, [user]);
+  }, [user, axiosSecure]);
 
   const total = cartItems.length
     ? cartItems
@@ -70,7 +70,7 @@ const Checkout = () => {
     // reset user cart items
     fetch(`https://foodcart-server-eight.vercel.app/resetCart/${user?.uid}`, {
       method: "DELETE",
-    })
+    });
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FoodCartContext from "../../Context/FoodCartContext";
 import { useNavigate } from "react-router";
 import axios from "axios";

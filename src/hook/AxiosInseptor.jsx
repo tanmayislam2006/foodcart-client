@@ -1,7 +1,6 @@
 import React, { use, useEffect, useMemo } from "react";
 import FoodCartContext from "../Context/FoodCartContext";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 const useAxiosSecure = () => {
   // Get user objects and logOut function from your context
